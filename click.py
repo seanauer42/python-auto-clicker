@@ -1,16 +1,41 @@
 import time
 import ctypes
+from typing import Optional
 
-# This is used to access Windows window API and is used a lot. I think it would be BS to type it every time
-bs = ctypes.windll.user32
+poo = input("Time? ")
+u32 = ctypes.windll.user32
 
-# This is the function that actually clicks the mouse. 2 is mouse down, 4 is mouse up
-def click():
-    bs.mouse_event(2,0,0,0,0)
-    bs.mouse_event(4,0,0,0,0)
+#Get the foreground window in the first place
+hWnd = u32.GetForegroundWindow()
+length = u32.GetWindowTextLengthW(hWnd)
+buf = ctypes.create_unicode_buffer(u32.GetWindowTextLengthW(u32.GetForegroundWindow()) + 1)
 
+#get the foreground window and return the title of the window
+def getForegroundWindowTitle() -> Optional[str]:
+	hWnd = u32.GetForegroundWindow()
+	length = u32.GetWindowTextLengthW(hWnd)
+	buf = ctypes.create_unicode_buffer(u32.GetWindowTextLengthW(u32.GetForegroundWindow()) + 1)
+	u32.GetWindowTextW(hWnd, buf, length +1)
+	if buf.value:
+		return buf.value
+	else:
+		return "None"
 
-# This will continue to click until you specifically tell it to stop with Ctrl+c or closing the python window
+#While powershell is the top window, tell the user to select a different window
+active_window = getForegroundWindowTitle()
+while "PowerShell" in active_window:
+	print("click on the training window.")
+	active_window = getForegroundWindowTitle()
+	time.sleep(.6)
+
+#click every poo amount of time until the active window changes
 while(True):
-    click()
-    time.sleep(0.6)
+	a = getForegroundWindowTitle()
+	if a == active_window:
+		print("click")
+		ctypes.windll.user32.mouse_event(2,0,0,0,0)
+		ctypes.windll.user32.mouse_event(4,0,0,0,0)
+		#time.sleep(.6)
+		time.sleep(float(poo))
+	else:
+		break
