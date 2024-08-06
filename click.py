@@ -4,6 +4,7 @@ from typing import Optional
 
 poo = input("Time? ")
 u32 = ctypes.windll.user32
+b = 0
 
 #Get the foreground window in the first place
 hWnd = u32.GetForegroundWindow()
@@ -23,7 +24,13 @@ def getForegroundWindowTitle() -> Optional[str]:
 
 #While powershell is the top window, tell the user to select a different window
 active_window = getForegroundWindowTitle()
+print(active_window)
 while "PowerShell" in active_window:
+	print("click on the training window.")
+	active_window = getForegroundWindowTitle()
+	time.sleep(.6)
+
+while "Python" in active_window:
 	print("click on the training window.")
 	active_window = getForegroundWindowTitle()
 	time.sleep(.6)
@@ -32,10 +39,11 @@ while "PowerShell" in active_window:
 while(True):
 	a = getForegroundWindowTitle()
 	if a == active_window:
-		print("click")
+		print("click", b)
 		ctypes.windll.user32.mouse_event(2,0,0,0,0)
 		ctypes.windll.user32.mouse_event(4,0,0,0,0)
 		#time.sleep(.6)
 		time.sleep(float(poo))
+		b = b + 1
 	else:
 		break
