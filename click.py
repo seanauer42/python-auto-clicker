@@ -1,5 +1,6 @@
 import time
 import ctypes
+import os
 from typing import Optional
 
 poo = input("Time? ")
@@ -36,14 +37,57 @@ while "Python" in active_window:
 	time.sleep(.6)
 
 #click every poo amount of time until the active window changes
-while(True):
-	a = getForegroundWindowTitle()
-	if a == active_window:
-		print("click", b)
-		ctypes.windll.user32.mouse_event(2,0,0,0,0)
-		ctypes.windll.user32.mouse_event(4,0,0,0,0)
-		#time.sleep(.6)
-		time.sleep(float(poo))
-		b = b + 1
-	else:
-		break
+if poo == "":
+	poo = 0.6
+
+def endless_click():
+	global b
+	while(True):
+		a = getForegroundWindowTitle()
+		if a == active_window:
+			print("click", b)
+			ctypes.windll.user32.mouse_event(2,0,0,0,0)
+			ctypes.windll.user32.mouse_event(4,0,0,0,0)
+			#time.sleep(.6)
+			time.sleep(float(poo))
+			b = b + 1
+		else:
+			break
+
+def second():
+	global b
+	second = 0
+	hour = 0
+	minute = 0
+	while(True):
+		a = getForegroundWindowTitle()
+		if a == active_window:
+			# os.system('cls')
+			if minute < 10 and second < 10:
+				print(str(hour) + ":0" + str(minute) + ":0" + str(second))
+			elif minute < 10:
+				print(str(hour) + ":0" + str(minute) + ":" + str(second))
+			elif second < 10:
+				print(str(hour) + ":" + str(minute) + ":0" + str(second))
+			else:
+				print(str(hour) + ":" + str(minute) + ":" + str(second))
+			ctypes.windll.user32.mouse_event(2,0,0,0,0)
+			ctypes.windll.user32.mouse_event(4,0,0,0,0)
+			#time.sleep(.6)
+			time.sleep(float(poo))
+			b = b + 1
+			second = second + 1
+			if b % 60 == 0:
+				minute = minute + 1
+				second = 0
+			if minute == 60:
+				hour = hour + 1
+				minute = 0
+		else:
+			break
+
+if float(poo) == 1.0:
+	second()
+else:
+	endless_click()
+
